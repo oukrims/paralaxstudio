@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { HeroSection } from "@/components/hero/HeroSection";
 import { SelectedProjectsSection } from "@/components/sections/SelectedProjectsSection";
-import { QuoteSection } from "@/components/sections/QuoteSection";
+import { Quote } from "@/components/sections/Quote";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { AboutSection } from "@/components/sections/AboutSection";
@@ -35,7 +35,7 @@ export default async function LocalePage({ params }: LocalePageProps) {
   return (
     <div className="relative pb-24">
       <HeroSection locale={locale} content={homepage.hero} />
-      <QuoteSection content={homepage.quote} />
+      <Quote quote={homepage.hero.quote} attribution="Parallax Stud.io" />
       <SelectedProjectsSection content={homepage.featuredProjects} locale={locale} />
       <ServicesSection content={homepage.services} locale={locale} />
       <ProcessSection content={homepage.process} />

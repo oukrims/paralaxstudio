@@ -78,11 +78,6 @@ export type DifferentiatorsSection = {
   items: Differentiator[];
 };
 
-export type QuoteSection = {
-  text: string;
-  attribution?: string;
-};
-
 export type ClientType = {
   id: string;
   title: string;
@@ -143,7 +138,6 @@ export type FooterContent = {
 
 export type HomepageContent = {
   hero: HeroContent;
-  quote: QuoteSection;
   featuredProjects: FeaturedProjectsSection;
   services: ServicesSection;
   process: ProcessSection;
@@ -220,10 +214,6 @@ const mockDatabase: MockDatabase = {
       quote:
         "La clé pour créer une mise en scène 3D mémorable est de lui insuffler une âme.",
       gallery: galleryImages,
-    },
-    quote: {
-      text: "La clé pour créer une mise en scène 3D mémorable est de lui insuffler une âme.",
-      attribution: "Parallax Stud.io",
     },
     featuredProjects: {
       title: "Projets en vedette",
@@ -604,10 +594,6 @@ const mockDatabase: MockDatabase = {
         "Parallax Stud.io is a French-Moroccan agency specialized in premium 3D architectural imagery. We transform your concepts into breathtaking visuals that captivate and convince your clients.",
       quote: "The key to a memorable 3D scene is the soul you breathe into it.",
       gallery: galleryImages,
-    },
-    quote: {
-      text: "The key to a memorable 3D scene is the soul you breathe into it.",
-      attribution: "Parallax Stud.io",
     },
     featuredProjects: {
       title: "Highlighted projects",
