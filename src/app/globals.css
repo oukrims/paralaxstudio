@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color: #f4f4f5;
+  background-color: #050505;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #050505;
+    color: #e7e5e4;
+    font-family: var(--font-body), "Inter", "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: -0.01em;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  a {
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading), "Space Grotesk", "Inter", sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes hero-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@layer utilities {
+  .animate-hero-marquee {
+    animation: hero-marquee 38s linear infinite;
+  }
+
+  .cta-button {
+    position: relative;
+    background: transparent;
+    overflow: hidden;
+    transition: color 0.4s ease;
+  }
+
+  .cta-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #f5f5f5;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+    z-index: 0;
+  }
+
+  .cta-button:hover::before {
+    transform: scaleX(1);
+  }
+
+  .cta-button > span {
+    position: relative;
+    z-index: 10;
+    transition: color 0.4s ease;
+  }
+
+  .cta-button:hover > span {
+    color: #040404;
+  }
+
+  .animation-paused:hover {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-hero-marquee {
+      animation-duration: 0s;
+    }
+  }
+
+  @keyframes hero-ripple {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.35;
+    }
+    60% {
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(3.8);
+      opacity: 0;
+    }
+  }
+
+  .hero-ripple-circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 320px;
+    height: 320px;
+    border-radius: 9999px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    animation: hero-ripple 16s linear infinite;
+  }
 }
