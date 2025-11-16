@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 'use client';
 
 import React, { type JSX } from 'react';
@@ -7,6 +5,26 @@ import { motion, HTMLMotionProps } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
+
+// Define more specific types for animation variants to avoid 'any'
+type AnimationVariant = {
+  filter: string;
+  opacity: number;
+  translateX?: number;
+  translateY?: number;
+};
+
+type AnimationVariantWithTransition = AnimationVariant & {
+  transition: {
+    duration: number;
+    ease: string;
+  };
+};
+
+type Variants = {
+  hidden: AnimationVariant;
+  visible: AnimationVariantWithTransition;
+};
 
 const containerVariants = {
   hidden: {},
@@ -17,9 +35,7 @@ const containerVariants = {
   },
 };
 
-const generateVariants = (
-  direction: Direction
-): { hidden: any; visible: any } => {
+const generateVariants = (direction: Direction): Variants => {
   const axis = direction === 'left' || direction === 'right' ? 'X' : 'Y';
   const value = direction === 'right' || direction === 'down' ? 100 : -100;
 
@@ -61,10 +77,7 @@ const TextAnimation = ({
     margin?: string;
     once?: boolean;
   };
-  variants?: {
-    hidden?: any;
-    visible?: any;
-  };
+  variants?: Partial<Variants>;
   direction?: Direction;
   letterAnime?: boolean;
   lineAnime?: boolean;
@@ -79,12 +92,12 @@ const TextAnimation = ({
 
   const MotionComponent = motion[
     as as keyof typeof motion
-  ] as React.ComponentType<HTMLMotionProps<any>>;
+  ] as React.ComponentType<HTMLMotionProps<keyof JSX.IntrinsicElements>>;
 
   return (
     <MotionComponent
-      whileInView='visible'
-      initial='hidden'
+      whileInView="visible"
+      initial="hidden"
       variants={containerVariants}
       viewport={viewport}
       className={cn(

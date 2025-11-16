@@ -46,7 +46,7 @@ const projects = [
     color: '#fd521a',
   },
 ];
-export default function index(): JSX.Element {
+export default function StackedCards(): JSX.Element {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -73,7 +73,6 @@ export default function index(): JSX.Element {
                 key={`p_${i}`}
                 i={i}
                 url={project?.link}
-                src={project?.src}
                 title={project?.title}
                 color={project?.color}
                 description={project?.description}
@@ -99,7 +98,6 @@ interface CardProps {
   i: number;
   title: string;
   description: string;
-  src: string;
   url: string;
   color: string;
   progress: MotionValue<number>;
@@ -110,7 +108,6 @@ export const Card: React.FC<CardProps> = ({
   i,
   title,
   description,
-  src,
   url,
   color,
   progress,
