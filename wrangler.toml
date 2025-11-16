@@ -6,6 +6,10 @@ project_name = "parallaxstudio"
 build_command = "npm run build"
 build_output_dir = "./out"
 
+[assets]
+# Cloudflare CLI uses this when running `wrangler deploy --assets` or `wrangler pages deploy`.
+directory = "./out"
+
 [vars]
 # Public Pages hostname (used for absolute URLs in the frontend).
 NEXT_PUBLIC_SITE_URL = "https://staging.paralax-stud.io"
