@@ -4,20 +4,21 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-import type { HeroContent } from "@/lib/mockWordpressClient";
+import type { HeroContent, FooterContent, SiteSettings } from "@/lib/wordpressClient";
 import type { Locale } from "@/i18n/config";
 
 import { cn } from "@/lib/utils";
 import { localizeHref } from "@/lib/localizeHref";
-import { MainNav } from "../layout/MainNav";
 import { HeroParallax } from "../ui/hero-parallax";
 
 type HeroSectionProps = {
   locale: Locale;
   content: HeroContent;
+  settings: SiteSettings;
+  footer: FooterContent;
 };
 
-export function HeroSection({ locale, content }: HeroSectionProps) {
+export function HeroSection({ locale, content, settings, footer }: HeroSectionProps) {
   const containerRef = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -55,7 +56,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
 
     return repeated.map((image, index) => ({
       title: image.alt || `Gallery item ${index + 1}`,
-      link: localizeHref(locale, "/portfolio"),
+      link: localizeHref(locale, "/gallery"),
       thumbnail: image.src,
     }));
   }, [content.gallery, locale]);
@@ -65,10 +66,8 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
       ref={containerRef}
       className="relative isolate h-[200vh] overflow-hidden bg-[#040404]"
     >
-      <div className="absolute inset-x-0 top-0 z-20 flex h-screen flex-col">
-        <MainNav locale={locale} services={servicesList} />
-
-        <div className="mx-auto flex w-[96%] max-w-6xl flex-1 flex-col justify-center gap-12 px-6 pb-24 pt-16 sm:px-10">
+      <div className="absolute inset-x-0 top-0 z-20 flex h-screen flex-col pt-24">
+        <div className="mx-auto flex w-[96%] max-w-6xl flex-1 flex-col justify-center gap-12 px-6 pb-24 sm:px-10">
           <motion.div
             style={{ y: headlineTranslation }}
             className="flex flex-col gap-8 text-left sm:max-w-3xl"
@@ -99,7 +98,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
                 </span>
               </Link>
               <Link
-                href={localizeHref(locale, "/portfolio")}
+                href={localizeHref(locale, "/gallery")}
                 className="text-[11px] uppercase tracking-[0.4em] text-neutral-400 transition-colors hover:text-neutral-200"
               >
                 {heroCopy.secondaryCta}
@@ -139,16 +138,3 @@ const heroDictionary: Record<Locale, {
     secondaryCta: "Voir le portfolio",
   },
 };
-
-const servicesList = [
-  "3D Exterior Rendering Services",
-  "3D Home and Residential Rendering Services",
-  "3D Aerial View Rendering Services",
-  "3D Rendering Services for Real Estate",
-  "High-rise Building Rendering Services",
-  "Hospitality 3D Rendering Services",
-  "Commercial Architectural 3D Rendering Services",
-  "Architectural Site Plan 3D Rendering Services",
-];
-
-

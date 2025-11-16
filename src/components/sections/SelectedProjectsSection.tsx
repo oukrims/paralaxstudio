@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { Carousel, Card, type CarouselCard } from "@/components/ui/apple-cards-carousel";
-import type { FeaturedProjectsSection } from "@/lib/mockWordpressClient";
+import type { FeaturedProjectsSection } from "@/lib/wordpressClient";
 import type { Locale } from "@/i18n/config";
 import { localizeHref } from "@/lib/localizeHref";
 

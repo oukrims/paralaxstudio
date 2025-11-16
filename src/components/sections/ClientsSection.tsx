@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 import type { Locale } from "@/i18n/config";
-import type { ClientsSection as ClientsSectionContent } from "@/lib/mockWordpressClient";
+import type { ClientsSection as ClientsSectionContent } from "@/lib/wordpressClient";
 import { localizeHref } from "@/lib/localizeHref";
 
 type ClientsSectionProps = {
@@ -33,9 +34,20 @@ export function ClientsSection({ content, locale }: ClientsSectionProps) {
             className="grid gap-6 border-b border-neutral-900 py-10 last:border-b-0 md:grid-cols-[220px_minmax(0,1fr)]"
           >
             <div className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.4em] text-neutral-500">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              {client.logo ? (
+                <div className="relative h-12 w-32 opacity-80">
+                  <Image
+                    src={client.logo.src}
+                    alt={client.logo.alt}
+                    fill
+                    className="object-contain object-left"
+                  />
+                </div>
+              ) : (
+                <span className="text-xs uppercase tracking-[0.4em] text-neutral-500">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              )}
               <h3 className="text-xl font-semibold text-neutral-100">{client.title}</h3>
             </div>
             <p className="text-neutral-400">{client.description}</p>

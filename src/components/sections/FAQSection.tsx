@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import type { FAQSection as FAQSectionContent } from "@/lib/mockWordpressClient";
+import type { FAQSection as FAQSectionContent } from "@/lib/wordpressClient";
 
 type FAQSectionProps = {
   content: FAQSectionContent;

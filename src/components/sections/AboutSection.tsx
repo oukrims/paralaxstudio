@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { Locale } from "@/i18n/config";
-import type { AboutSection as AboutSectionContent } from "@/lib/mockWordpressClient";
+import type { AboutSection as AboutSectionContent } from "@/lib/wordpressClient";
 import { localizeHref } from "@/lib/localizeHref";
 
 type AboutSectionProps = {

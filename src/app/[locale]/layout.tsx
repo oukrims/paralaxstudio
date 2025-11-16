@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { isLocale } from "@/i18n/config";
+import { isLocale, type Locale } from "@/i18n/config";
+import { FloatingContactButton } from "@/components/ui/floating-contact-button";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -27,5 +29,13 @@ export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
     notFound();
   }
 
-  return <main className="overflow-hidden">{children}</main>;
+  const locale = params.locale as Locale;
+
+  return (
+    <>
+      <main className="overflow-hidden">{children}</main>
+      <FloatingContactButton locale={locale} />
+      <CookieBanner locale={locale} />
+    </>
+  );
 }

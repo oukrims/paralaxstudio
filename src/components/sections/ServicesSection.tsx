@@ -1,6 +1,6 @@
 "use client";
 
-import type { ServicesSection as ServicesSectionType } from "@/lib/mockWordpressClient";
+import type { ServicesSection as ServicesSectionType } from "@/lib/wordpressClient";
 import { cn } from "@/lib/utils";
 import {
   IconLayoutGrid,
@@ -31,7 +31,7 @@ export function ServicesSection({ content }: ServicesSectionProps) {
     icon: serviceIcons[index] || <IconLayoutGrid />,
   }));
 
-  const videoUrl = "/video/main_page_video.webm";
+  const videoUrl = content.videoUrl || "/video/main_page_video.webm";
 
   return (
     <section className="relative bg-neutral-950 py-24 overflow-hidden">

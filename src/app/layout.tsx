@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-heading",
+const centuryGothic = localFont({
+  src: "../../public/century-gothic-bold.ttf",
+  variable: "--font-century-gothic",
+  weight: "700",
   display: "swap",
 });
 
@@ -30,7 +25,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased bg-[#050505] text-[#f4f4f5]`}
+        suppressHydrationWarning
+        className={`${centuryGothic.variable} antialiased bg-[#050505] text-[#f4f4f5] font-[family-name:var(--font-century-gothic)]`}
       >
         {children}
       </body>

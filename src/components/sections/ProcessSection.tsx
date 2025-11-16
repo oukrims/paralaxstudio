@@ -2,7 +2,7 @@
 import { useRef, useEffect } from "react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import { Timeline } from "../ui/timeline";
-import type { ProcessSection as ProcessSectionType } from "@/lib/mockWordpressClient";
+import type { ProcessSection as ProcessSectionType } from "@/lib/wordpressClient";
 
 export function ProcessSection({ content }: { content: ProcessSectionType }) {
   const timelineData = content.steps.map((step) => ({

@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         hostname: "source.unsplash.com",
       },
     ],
-    unoptimized: false,
+    unoptimized: true,
   },
   async redirects() {
     return [
