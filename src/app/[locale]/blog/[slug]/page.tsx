@@ -9,28 +9,11 @@ import { localizeHref } from "@/lib/localizeHref";
 import { fetchBlogPageContent, fetchBlogPostContent, fetchSiteSettings } from "@/lib/wordpressClient";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 
-type BlogPostPageProps = {
-  params: {
-    locale: string;
-    slug: string;
-  };
-};
-
-export async function generateStaticParams() {
-  const perLocale = await Promise.all(
-    locales.map(async (locale) => {
-      const page = await fetchBlogPageContent(locale);
-      return page.articles.articles.map((article) => ({
-        locale,
-        slug: article.slug,
-      }));
-    }),
-  );
-
-  return perLocale.flat();
-}
-
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: { locale: string; slug: string };
+}) {
   if (!isLocale(params.locale)) {
     notFound();
   }
