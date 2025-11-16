@@ -3,15 +3,16 @@ import { MainNav } from "@/components/layout/MainNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SimpleHero } from "@/components/sections/SimpleHero";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
-import { fetchSiteSettings } from "@/lib/wordpressClient";
+import { fetchHomepageContent, fetchSiteSettings } from "@/lib/wordpressClient";
+import type { SimpleHeroContent } from "@/lib/defaultContent";
 import { isLocale, type Locale } from "@/i18n/config";
 import { Check } from "lucide-react";
 
 type ClientTypePageProps = {
-  params: {
+  params: Promise<{
     locale: string;
     clientType: string;
-  };
+  }>;
 };
 
 const validClientTypes = ["architectes", "urbanistes", "promoteurs", "designers", "particuliers"];
@@ -30,12 +31,15 @@ export function generateStaticParams() {
 }
 
 export default async function ClientTypePage({ params }: ClientTypePageProps) {
-  if (!isLocale(params.locale) || !validClientTypes.includes(params.clientType)) {
+  const { locale: localeParam, clientType } = await params;
+
+  if (!isLocale(localeParam) || !validClientTypes.includes(clientType)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const settings = await fetchSiteSettings(locale);
+  const homepage = await fetchHomepageContent(locale);
 
   const content = {
     fr: {
@@ -354,17 +358,18 @@ export default async function ClientTypePage({ params }: ClientTypePageProps) {
     },
   };
 
-  const pageContent = content[locale][params.clientType as keyof typeof content.fr];
+  const pageContent = content[locale][clientType as keyof typeof content.fr];
+  const heroContent: SimpleHeroContent = {
+    eyebrow: pageContent.eyebrow,
+    title: pageContent.title,
+    subtitle: pageContent.subtitle,
+  };
 
   return (
     <>
-      <MainNav locale={locale} services={settings.servicesNav} footer={settings.footer} navigation={settings.navigation} />
+      <MainNav locale={locale} services={settings.servicesNav} footer={homepage.footer} navigation={settings.navigation} />
       <div className="relative min-h-screen bg-[#050505] pb-24">
-        <SimpleHero
-          eyebrow={pageContent.eyebrow}
-          title={pageContent.title}
-          subtitle={pageContent.subtitle}
-        />
+        <SimpleHero content={heroContent} locale={locale} />
 
         {/* Benefits Section */}
         <section className="relative overflow-hidden py-24">
@@ -442,7 +447,7 @@ export default async function ClientTypePage({ params }: ClientTypePageProps) {
           locale={locale}
         />
       </div>
-      <SiteFooter content={settings.footer} locale={locale} />
+      <SiteFooter content={homepage.footer} locale={locale} />
     </>
   );
 }

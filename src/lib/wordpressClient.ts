@@ -8,8 +8,13 @@ import type {
   ContactPageContent,
   GalleryPageContent,
   HomepageContent,
+  ProjectsListPageContent,
+  SiteSettings,
   StudioPageContent,
   TarifsPageContent,
+  Project,
+  Service,
+  ServicesListPageContent,
   VousEtesPageContent,
 } from "./defaultContent";
 import {
@@ -1682,6 +1687,7 @@ export async function fetchProjectContent(
 async function fetchClientsFromWordPress(): Promise<ClientLogo[]> {
   const response = await executeGraphQL<{ clients?: ClientLogo[] }>(
     CLIENTS_QUERY,
+    {},
   );
 
   if (!response?.clients) {

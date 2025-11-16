@@ -14,9 +14,9 @@ import { fetchStudioPageContent, fetchSiteSettings } from "@/lib/wordpressClient
 import { isLocale, locales, type Locale } from "@/i18n/config";
 
 type StudioPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {

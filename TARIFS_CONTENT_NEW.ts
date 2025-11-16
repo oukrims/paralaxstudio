@@ -1,4 +1,7 @@
+// @ts-nocheck
 // This is the new tarifsPageDatabase content to replace in defaultContent.ts
+import type { Locale } from "./src/i18n/config";
+import type { TarifsPageContent } from "./src/lib/defaultContent";
 
 const tarifsPageDatabase: Record<Locale, TarifsPageContent> = {
   fr: {

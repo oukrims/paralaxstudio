@@ -62,11 +62,11 @@ export default function Quote({ content }: QuoteProps) {
                 lineAnime={item.lineAnime}
                 classname={`xl:text-8xl text-7xl max-w-4xl ${textClass} font-medium`}
                 variants={{
-                  hidden: { filter: 'blur(10px)', opacity: 0, y: 20 },
+                  hidden: { filter: 'blur(10px)', opacity: 0, translateY: 20 },
                   visible: {
                     filter: 'blur(0px)',
                     opacity: 1,
-                    y: 0,
+                    translateY: 0,
                     transition: { ease: 'linear', duration: 0.2 },
                   },
                 }}

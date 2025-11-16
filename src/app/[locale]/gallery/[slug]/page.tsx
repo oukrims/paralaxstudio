@@ -7,27 +7,50 @@ import { VirtualTourEmbed } from "@/components/ui/virtual-tour-embed";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { fetchGalleryPageContent, fetchSiteSettings } from "@/lib/wordpressClient";
+import { fetchGalleryPageContent as fetchGalleryPageContentFallback } from "@/lib/defaultContent";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { localizeHref } from "@/lib/localizeHref";
 
 type AlbumPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
     slug: string;
-  };
+  }>;
 };
 
-export function generateStaticParams() {
-  // TODO: Generate paths from WordPress albums
-  return locales.map((locale) => ({ locale, slug: '' }));
+export async function generateStaticParams() {
+  const paramsByLocale = await Promise.all(
+    locales.map(async (locale) => {
+      const page = await fetchGalleryPageContentFallback(locale);
+      const albums = page.showcase?.albums || [];
+      const localeParam = locale as Locale;
+
+      return albums
+        .map((album) => {
+          const generatedSlug = album.title.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+          const slug = album.slug || generatedSlug;
+
+          return slug ? { locale: localeParam, slug } : null;
+        })
+        .filter((entry): entry is { locale: Locale; slug: string } => Boolean(entry));
+    }),
+  );
+
+  return paramsByLocale.flat();
 }
 
+export const dynamicParams = false;
+
 export default async function AlbumPage({ params }: AlbumPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam, slug } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchGalleryPageContent(locale);
   const settings = await fetchSiteSettings(locale);
 
@@ -36,7 +59,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     const albumSlug = a.slug || a.title.toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
-    return albumSlug === params.slug;
+    return albumSlug === slug;
   });
 
   if (!album) {

@@ -1,32 +1,12 @@
 'use client';
 
 import React, { type JSX } from 'react';
-import { motion, HTMLMotionProps } from 'motion/react';
+import { motion, HTMLMotionProps, type Variant, type Variants as MotionVariants } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 
-// Define more specific types for animation variants to avoid 'any'
-type AnimationVariant = {
-  filter: string;
-  opacity: number;
-  translateX?: number;
-  translateY?: number;
-};
-
-type AnimationVariantWithTransition = AnimationVariant & {
-  transition: {
-    duration: number;
-    ease: string;
-  };
-};
-
-type Variants = {
-  hidden: AnimationVariant;
-  visible: AnimationVariantWithTransition;
-};
-
-const containerVariants = {
+const containerVariants: MotionVariants = {
   hidden: {},
   visible: {
     transition: {
@@ -35,26 +15,32 @@ const containerVariants = {
   },
 };
 
-const generateVariants = (direction: Direction): Variants => {
+const generateVariants = (direction: Direction): MotionVariants => {
   const axis = direction === 'left' || direction === 'right' ? 'X' : 'Y';
   const value = direction === 'right' || direction === 'down' ? 100 : -100;
 
-  return {
-    hidden: {
-      filter: 'blur(10px)',
-      opacity: 0,
-      [`translate${axis}`]: value,
-    },
-    visible: {
-      filter: 'blur(0px)',
-      opacity: 1,
-      [`translate${axis}`]: 0,
-      transition: {
-        duration: 0.4,
-        ease: 'easeOut',
-      },
+  const hidden: Variant = {
+    filter: 'blur(10px)',
+    opacity: 0,
+  };
+  const visible: Variant = {
+    filter: 'blur(0px)',
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: 'easeOut',
     },
   };
+
+  if (axis === 'X') {
+    hidden.translateX = value;
+    visible.translateX = 0;
+  } else {
+    hidden.translateY = value;
+    visible.translateY = 0;
+  }
+
+  return { hidden, visible };
 };
 
 const defaultViewport = { amount: 0.3, margin: '0px 0px 0px 0px' };
@@ -77,22 +63,24 @@ const TextAnimation = ({
     margin?: string;
     once?: boolean;
   };
-  variants?: Partial<Variants>;
+  variants?: MotionVariants;
   direction?: Direction;
   letterAnime?: boolean;
   lineAnime?: boolean;
 }) => {
-  const baseVariants = variants || generateVariants(direction);
-  const modifiedVariants = {
+  const generatedVariants = generateVariants(direction);
+  const baseVariants: MotionVariants = {
+    ...generatedVariants,
+    ...(variants ?? {}),
+  };
+  const modifiedVariants: MotionVariants = {
     hidden: baseVariants.hidden,
-    visible: {
-      ...baseVariants.visible,
-    },
+    visible: baseVariants.visible,
   };
 
   const MotionComponent = motion[
     as as keyof typeof motion
-  ] as React.ComponentType<HTMLMotionProps<keyof JSX.IntrinsicElements>>;
+  ] as React.ComponentType<HTMLMotionProps<any>>;
 
   return (
     <MotionComponent

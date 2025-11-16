@@ -11,9 +11,9 @@ import { fetchSiteSettings, fetchTarifsPageContent } from "@/lib/wordpressClient
 import { isLocale, locales, type Locale } from "@/i18n/config";
 
 type TarifsPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
@@ -21,13 +21,19 @@ export function generateStaticParams() {
 }
 
 export default async function TarifsPage({ params }: TarifsPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchTarifsPageContent(locale);
   const settings = await fetchSiteSettings(locale);
+
+  const primaryFooterContact = page.footer.contact?.[0];
+  const contactHref = primaryFooterContact?.href
+    || (primaryFooterContact?.value ? `mailto:${primaryFooterContact.value}` : "#");
 
   return (
     <div className="relative pb-24">
@@ -309,7 +315,7 @@ export default async function TarifsPage({ params }: TarifsPageProps) {
               {page.videoPricing.specialOffers.offers.map((offer) => (
                 <div key={offer.id} className="rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-8">
                   <h4 className="mb-4 text-2xl font-bold text-white">
-                    {offer.name}
+                    {offer.title}
                   </h4>
                   <ul className="mb-6 space-y-2 text-neutral-300">
                     {offer.features.map((feature, idx) => (
@@ -320,7 +326,7 @@ export default async function TarifsPage({ params }: TarifsPageProps) {
                     ))}
                   </ul>
                   <div className="text-3xl font-bold text-white">
-                    {offer.price}
+                    {offer.priceLabel ? `${offer.priceLabel} ${offer.price} ${offer.currency}` : `${offer.price} ${offer.currency}`}
                   </div>
                 </div>
               ))}
@@ -413,7 +419,7 @@ export default async function TarifsPage({ params }: TarifsPageProps) {
             </a>
 
             <a
-              href={`mailto:${page.footer.contact.value}`}
+              href={contactHref}
               className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:border-white/50 hover:bg-white/5 sm:w-auto"
             >
               <span>{locale === "fr" ? "Envoyer un email →" : "Send an email →"}</span>

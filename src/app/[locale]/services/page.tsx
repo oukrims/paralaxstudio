@@ -7,13 +7,14 @@ import { SimpleHero } from "@/components/sections/SimpleHero";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { fetchServicesPageContent, fetchSiteSettings, fetchHomepageContent } from "@/lib/wordpressClient";
+import type { Service } from "@/lib/defaultContent";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { localizeHref } from "@/lib/localizeHref";
 
 type ServicesPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
@@ -21,11 +22,13 @@ export function generateStaticParams() {
 }
 
 export default async function ServicesPage({ params }: ServicesPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchServicesPageContent(locale);
   const settings = await fetchSiteSettings(locale);
 
@@ -44,7 +47,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
       {/* Services Grid */}
       <section className="relative mx-auto w-[96%] max-w-7xl px-6 pb-24 pt-16 sm:px-10">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {page.services.map((service) => (
+          {page.services.map((service: Service) => (
             <Link
               key={service.slug}
               href={localizeHref(locale, `/services/${service.slug}`)}

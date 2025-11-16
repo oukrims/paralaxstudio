@@ -90,6 +90,7 @@ export type Differentiator = {
 
 export type DifferentiatorsSection = {
   title: string;
+  intro?: string;
   items: Differentiator[];
 };
 
@@ -240,6 +241,12 @@ export type ImageAlbum = {
   category?: string;
   location?: string;
   year?: string;
+  client?: string;
+  architect?: string;
+  renderType?: string;
+  services?: string;
+  virtualTourUrl?: string;
+  videoUrl?: string;
   coverImage?: HeroImage;
   images: HeroImage[];
 };
@@ -483,6 +490,7 @@ export type VideoPackage = {
   price: number;
   currency: string;
   priceUnit: string;
+  popular?: boolean;
 };
 
 export type SpecialOffer = {

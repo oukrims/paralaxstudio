@@ -9,13 +9,14 @@ import { ClientsSection } from "@/components/sections/ClientsSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { fetchProjectsPageContent, fetchSiteSettings, fetchHomepageContent } from "@/lib/wordpressClient";
+import type { Project } from "@/lib/defaultContent";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 import { localizeHref } from "@/lib/localizeHref";
 
 type ProjectsPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
@@ -23,11 +24,13 @@ export function generateStaticParams() {
 }
 
 export default async function ProjectsPage({ params }: ProjectsPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchProjectsPageContent(locale);
   const settings = await fetchSiteSettings(locale);
 
@@ -46,7 +49,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
       {/* Projects Grid */}
       <section className="relative mx-auto w-[96%] max-w-7xl px-6 pb-24 pt-16 sm:px-10">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {page.projects.map((project) => (
+          {page.projects.map((project: Project) => (
             <Link
               key={project.slug}
               href={localizeHref(locale, `/projects/${project.slug}`)}

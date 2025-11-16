@@ -2,22 +2,29 @@ import { notFound } from "next/navigation";
 import { MainNav } from "@/components/layout/MainNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
-import { fetchSiteSettings } from "@/lib/wordpressClient";
-import { isLocale, type Locale } from "@/i18n/config";
+import { fetchHomepageContent, fetchSiteSettings } from "@/lib/wordpressClient";
+import { isLocale, locales, type Locale } from "@/i18n/config";
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 type TermsPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export default async function TermsPage({ params }: TermsPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const settings = await fetchSiteSettings(locale);
+  const homepage = await fetchHomepageContent(locale);
 
   const content = {
     fr: {
@@ -160,7 +167,7 @@ export default async function TermsPage({ params }: TermsPageProps) {
 
   return (
     <>
-      <MainNav locale={locale} services={settings.servicesNav} footer={settings.footer} navigation={settings.navigation} />
+      <MainNav locale={locale} services={settings.servicesNav} footer={homepage.footer} navigation={settings.navigation} />
       <div className="relative min-h-screen bg-[#050505] pb-24 pt-32">
         <div className="mx-auto w-[95%] max-w-7xl px-6 sm:px-10">
           {/* Header */}
@@ -208,7 +215,7 @@ export default async function TermsPage({ params }: TermsPageProps) {
         }}
         locale={locale}
       />
-      <SiteFooter content={settings.footer} locale={locale} />
+      <SiteFooter content={homepage.footer} locale={locale} />
     </>
   );
 }

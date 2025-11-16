@@ -10,9 +10,9 @@ import { fetchBlogPageContent, fetchSiteSettings } from "@/lib/wordpressClient";
 import { isLocale, locales, type Locale } from "@/i18n/config";
 
 type BlogPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
@@ -20,11 +20,13 @@ export function generateStaticParams() {
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchBlogPageContent(locale);
   const settings = await fetchSiteSettings(locale);
 

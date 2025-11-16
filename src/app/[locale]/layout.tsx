@@ -8,9 +8,9 @@ import { CookieBanner } from "@/components/ui/cookie-banner";
 
 type LocaleLayoutProps = {
   children: ReactNode;
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateMetadata(): Metadata {
@@ -24,12 +24,14 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  if (!isLocale(params.locale)) {
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
 
   return (
     <>

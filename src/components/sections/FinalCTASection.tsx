@@ -5,8 +5,8 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { localizeHref } from "@/lib/localizeHref";
 import type { FinalCTASection as FinalCTASectionContent } from "@/lib/wordpressClient";
-import { Sparkles } from "@/components/ui/sparkles-simple";
-import { Spotlight } from "@/components/ui/spotlight";
+import {Sparkles  } from "@/components/ui/sparkles-simple";
+// import { Spotlight } from "@/components/ui/spotlight";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
 type FinalCTASectionProps = {
@@ -28,7 +28,7 @@ export function FinalCTASection({ content, locale }: FinalCTASectionProps) {
         <div className="relative flex flex-col gap-10">
 
           <BackgroundBeamsWithCollision>
-
+            <Sparkles/>
             <div className="space-y-5">
               <span className="text-sm uppercase tracking-[0.4em] text-neutral-500">
                 {content.subtitle}

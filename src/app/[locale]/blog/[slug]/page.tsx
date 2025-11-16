@@ -7,20 +7,42 @@ import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { localizeHref } from "@/lib/localizeHref";
 import { fetchBlogPageContent, fetchBlogPostContent, fetchSiteSettings } from "@/lib/wordpressClient";
+import { fetchBlogPageContent as fetchBlogPageContentFallback } from "@/lib/defaultContent";
+import type { BlogPostSectionContent } from "@/lib/defaultContent";
 import { isLocale, locales, type Locale } from "@/i18n/config";
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const paramsByLocale = await Promise.all(
+    locales.map(async (locale) => {
+      const page = await fetchBlogPageContentFallback(locale);
+      const slugs =
+        page.articles?.articles
+          ?.map((article) => article.href.split("/").pop() || "")
+          .filter(Boolean) || [];
+
+      return slugs.map((slug) => ({ locale, slug }));
+    }),
+  );
+
+  return paramsByLocale.flat();
+}
 
 export default async function BlogPostPage({
   params,
 }: {
-  params: { locale: string; slug: string };
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam, slug } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const [post, blogPage, settings] = await Promise.all([
-    fetchBlogPostContent(locale, params.slug),
+    fetchBlogPostContent(locale, slug),
     fetchBlogPageContent(locale),
     fetchSiteSettings(locale),
   ]);
@@ -56,7 +78,7 @@ export default async function BlogPostPage({
       </div>
 
       <article className="mx-auto mt-16 w-[96%] max-w-3xl space-y-12 px-6 text-neutral-200 sm:px-0">
-        {post.sections.map((section) => (
+        {post.sections.map((section: BlogPostSectionContent) => (
           <section key={section.id} className="space-y-4">
             {section.heading && (
               <h2 className="text-2xl font-semibold text-neutral-50">{section.heading}</h2>

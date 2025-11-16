@@ -9,9 +9,9 @@ import { fetchGalleryPageContent, fetchSiteSettings } from "@/lib/wordpressClien
 import { isLocale, locales, type Locale } from "@/i18n/config";
 
 type GalleryPageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
@@ -19,11 +19,13 @@ export function generateStaticParams() {
 }
 
 export default async function GalleryPage({ params }: GalleryPageProps) {
-  if (!isLocale(params.locale)) {
+  const { locale: localeParam } = await params;
+
+  if (!isLocale(localeParam)) {
     notFound();
   }
 
-  const locale = params.locale as Locale;
+  const locale = localeParam as Locale;
   const page = await fetchGalleryPageContent(locale);
   const settings = await fetchSiteSettings(locale);
 
