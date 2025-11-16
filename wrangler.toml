@@ -1,0 +1,18 @@
+name = "parallaxstudio"
+compatibility_date = "2025-02-15"
+
+[pages]
+project_name = "parallaxstudio"
+build_command = "npm run build"
+build_output_dir = "./out"
+
+[vars]
+# Public Pages hostname (used for absolute URLs in the frontend).
+NEXT_PUBLIC_SITE_URL = "https://staging.paralax-stud.io"
+# Public URL your Next.js export will call.
+NEXT_PUBLIC_WORDPRESS_GRAPHQL_ENDPOINT = "https://wp.paralax-stud.io/graphql"
+# Server-side GraphQL endpoint and optional auth header for protected APIs.
+WORDPRESS_GRAPHQL_ENDPOINT = "https://wp.paralax-stud.io/graphql"
+WORDPRESS_AUTH_HEADER = ""
+# Optional ISR-like TTL for fetch caching on Cloudflare (0 = no cache hint).
+WORDPRESS_CONTENT_REVALIDATE = "0"

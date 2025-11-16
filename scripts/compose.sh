@@ -8,6 +8,7 @@ Usage: scripts/compose.sh {start|stop|restart|wp} [dev|prod] [extra args...]
 
 Commands:
   start     Build (if needed) and start the stack in detached mode.
+  run       Build (if needed) and start the stack in the foreground (Ctrl+C to stop).
   stop      Stop and remove the stack.
   restart   Restart the stack (stop + start).
   wp        Run a WP-CLI command (defaults to dev stack). Example:
@@ -76,6 +77,9 @@ compose() {
 case "${ACTION_LC}" in
   start)
     compose up -d --build
+    ;;
+  run)
+    compose up --build
     ;;
   stop)
     compose down
